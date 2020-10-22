@@ -62,6 +62,38 @@ class EntityCheckerTest extends BaseTest
     /**
      * @throws Throwable
      */
+    public function testExistsArrayByPK(): void
+    {
+        /** @var TransactionInterface $transaction */
+        $transaction = $this->app->get(TransactionInterface::class);
+        $transaction->persist(new User('User1'));
+        $transaction->persist(new User('User2'));
+        $transaction->persist(new User('User3'));
+        $transaction->run();
+
+        $this->assertFalse($this->exists([4, 5]));
+        $this->assertTrue($this->exists([1, 2, 3]));
+    }
+
+    /**
+     * @throws Throwable
+     */
+    public function testExistsArrayByField(): void
+    {
+        /** @var TransactionInterface $transaction */
+        $transaction = $this->app->get(TransactionInterface::class);
+        $transaction->persist(new User('User1'));
+        $transaction->persist(new User('User2'));
+        $transaction->persist(new User('User3'));
+        $transaction->run();
+
+        $this->assertFalse($this->exists(['User5', 'User10'], 'name'));
+        $this->assertTrue($this->exists(['User1', 'User3'], 'name'));
+    }
+
+    /**
+     * @throws Throwable
+     */
     public function testSimpleUnique(): void
     {
         /** @var TransactionInterface $transaction */

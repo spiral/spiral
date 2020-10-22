@@ -6,6 +6,7 @@ namespace Spiral\Validation\Checker;
 
 use Cycle\ORM\ORMInterface;
 use Spiral\Core\Container\SingletonInterface;
+use Spiral\Database\Injection\Parameter;
 use Spiral\Validation\AbstractChecker;
 
 class EntityChecker extends AbstractChecker implements SingletonInterface
@@ -30,7 +31,7 @@ class EntityChecker extends AbstractChecker implements SingletonInterface
     }
 
     /**
-     * @param string|int  $value
+     * @param string|int|array  $value
      * @param string      $role
      * @param string|null $field
      * @return bool
@@ -38,11 +39,32 @@ class EntityChecker extends AbstractChecker implements SingletonInterface
     public function exists($value, string $role, ?string $field = null): bool
     {
         $repository = $this->orm->getRepository($role);
-        if ($field === null) {
-            return $repository->findByPK($value) !== null;
+
+        if (!empty($value)) {
+            if (is_scalar($value)) {
+                if ($field === null) {
+                    return $repository->findByPK($value) !== null;
+                }
+
+                return $repository->findOne([$field => $value]) !== null;
+            }
+
+            if (is_array($value)) {
+                $select = $repository->select();
+
+                if ($field !== null) {
+                    return $select
+                            ->where($field, 'IN', new Parameter($value))
+                            ->count() === \count($value);
+                }
+
+                return $select
+                        ->where('id', 'IN', new Parameter($value))
+                        ->count() === \count($value);
+            }
         }
 
-        return $repository->findOne([$field => $value]) !== null;
+        return false;
     }
 
     /**
