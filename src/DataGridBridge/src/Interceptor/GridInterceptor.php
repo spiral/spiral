@@ -15,9 +15,11 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\CoreInterface;
+use Spiral\Core\FactoryInterface;
 use Spiral\DataGrid\Annotation\DataGrid;
 use Spiral\DataGrid\GridFactory;
 use Spiral\DataGrid\GridFactoryInterface;
+use Spiral\DataGrid\InputMapperInterface;
 use Spiral\DataGrid\Response\GridResponseInterface;
 
 /**
@@ -33,6 +35,9 @@ final class GridInterceptor implements CoreInterceptorInterface
     /** @var ContainerInterface */
     private $container;
 
+    /** @var FactoryInterface */
+    private $factory;
+
     /** @var GridFactory */
     private $gridFactory;
 
@@ -42,15 +47,18 @@ final class GridInterceptor implements CoreInterceptorInterface
     /**
      * @param GridResponseInterface $response
      * @param ContainerInterface    $container
+     * @param FactoryInterface      $factory
      * @param GridFactory           $gridFactory
      */
     public function __construct(
         GridResponseInterface $response,
         ContainerInterface $container,
+        FactoryInterface $factory,
         GridFactory $gridFactory
     ) {
         $this->response = $response;
         $this->container = $container;
+        $this->factory = $factory;
         $this->gridFactory = $gridFactory;
     }
 
@@ -127,6 +135,8 @@ final class GridInterceptor implements CoreInterceptorInterface
             'options'  => $dataGrid->options,
             'defaults' => $dataGrid->defaults,
             'factory'  => $dataGrid->factory,
+            'mapper'   => $dataGrid->mapper,
+            'mapping'  => $dataGrid->mapping,
         ];
 
         if (is_string($schema['view'])) {
@@ -145,6 +155,10 @@ final class GridInterceptor implements CoreInterceptorInterface
             $schema['view'] = $schema['grid'];
         }
 
+        if ($schema['mapping'] === [] && method_exists($schema['grid'], 'getMapping')) {
+            $schema['mapping'] = $schema['grid']->getMapping();
+        }
+
         return $schema;
     }
 
@@ -154,6 +168,13 @@ final class GridInterceptor implements CoreInterceptorInterface
             $factory = $this->container->get($schema['factory']);
             if ($factory instanceof GridFactoryInterface) {
                 return $factory;
+            }
+        }
+
+        if (!empty($schema['mapping']) && !empty($schema['mapper']) && $this->container->has($schema['mapper'])) {
+            $mapper = $this->factory->make($schema['mapper'], ['mapping' => $schema['mapping']]);
+            if ($mapper instanceof InputMapperInterface) {
+                return $this->gridFactory->withMapper($mapper);
             }
         }
 

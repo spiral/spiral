@@ -58,4 +58,20 @@ class DataGrid
      * @var string
      */
     public $factory;
+
+    /**
+     * Custom input mapper
+     *
+     * @Attribute(name="mapper", type="string")
+     * @var string
+     */
+    public $mapper;
+
+    /**
+     * Custom input mapping, default to GridSchema->getMapping() if such method exists.
+     *
+     * @Attribute(name="mapping", type="array")
+     * @var array
+     */
+    public $mapping = [];
 }
