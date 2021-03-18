@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-use Symplify\MonorepoBuilder\ValueObject\Option;
 use Symplify\MonorepoBuilder\Release\ReleaseWorker\AddTagToChangelogReleaseWorker;
 use Symplify\MonorepoBuilder\Release\ReleaseWorker\PushNextDevReleaseWorker;
 use Symplify\MonorepoBuilder\Release\ReleaseWorker\PushTagReleaseWorker;
@@ -11,6 +10,7 @@ use Symplify\MonorepoBuilder\Release\ReleaseWorker\SetCurrentMutualDependenciesR
 use Symplify\MonorepoBuilder\Release\ReleaseWorker\SetNextMutualDependenciesReleaseWorker;
 use Symplify\MonorepoBuilder\Release\ReleaseWorker\TagVersionReleaseWorker;
 use Symplify\MonorepoBuilder\Release\ReleaseWorker\UpdateBranchAliasReleaseWorker;
+use Symplify\MonorepoBuilder\ValueObject\Option;
 
 /**
  * Monorepo Builder additional fields
@@ -84,24 +84,28 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             ],
         ],
         'require-dev'  => [
-            'phpunit/phpunit'           => '^8.5|^9.0',
-            'mockery/mockery'           => '^1.3',
-            'spiral/code-style'         => '^1.0',
-            'spiral/database'           => '^2.7.3',
-            'spiral/migrations'         => '^2.1',
-            'spiral/roadrunner'         => '^1.9.2',
-            'spiral/php-grpc'           => '^1.4',
-            'spiral/jobs'               => '^2.2',
-            'spiral/broadcast'          => '^2.0',
-            'spiral/broadcast-ws'       => '^1.0',
-            'cycle/orm'                 => '^1.2.6',
-            'laminas/laminas-hydrator'  => '^3.0',
+            // Cycle ORM
             'cycle/annotated'           => '^2.0.6',
             'cycle/migrations'          => '^1.0.1',
+            'cycle/orm'                 => '^1.2.6',
             'cycle/proxy-factory'       => '^1.2',
             'cycle/schema-builder'      => '^1.1',
-            'symplify/monorepo-builder' => '^8.3',
-            'vimeo/psalm'               => '^4.3',
+            'laminas/laminas-hydrator'  => '^3.0',
+            'spiral/database'           => '^2.7.3',
+            'spiral/migrations'         => '^2.1',
+
+            // RoadRunner
+            'spiral/roadrunner'         => '^1.9.2|^2.0',
+
+            // Testing
+            'phpunit/phpunit'           => '^8.5|^9.0',
+            'mockery/mockery'           => '^1.3',
+            'vimeo/psalm'               => '^4.6',
+            'spiral/code-style'         => '^1.0',
+            'ramsey/uuid'               => '^3.9',
+
+            // Deployment
+            'symplify/monorepo-builder' => '^8.3.40',
         ],
     ]);
 
@@ -109,8 +113,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         // Bridge
         'src/Bridge/DataGrid' => 'git@github.com:spiral/data-grid-bridge.git',
         'src/Bridge/Stempler' => 'git@github.com:spiral/stempler-bridge.git',
-        'src/Bridge/Monolog' => 'git@github.com:spiral/monolog-bridge.git',
-        'src/Bridge/Dotenv' => 'git@github.com:spiral/dotenv-bridge.git',
+        'src/Bridge/Monolog'  => 'git@github.com:spiral/monolog-bridge.git',
+        'src/Bridge/Dotenv'   => 'git@github.com:spiral/dotenv-bridge.git',
 
         // Components
         'src/AnnotatedRoutes' => 'git@github.com:spiral/annotated-routes.git',
@@ -141,7 +145,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         'src/Router'          => 'git@github.com:spiral/router.git',
         'src/Scaffolder'      => 'git@github.com:spiral/scaffolder.git',
         'src/Security'        => 'git@github.com:spiral/security.git',
-        'src/SendIt'          => 'git@github.com:spiral/sendit.git',
         'src/Session'         => 'git@github.com:spiral/session.git',
         'src/Snapshots'       => 'git@github.com:spiral/snapshots.git',
         'src/Stempler'        => 'git@github.com:spiral/stempler.git',

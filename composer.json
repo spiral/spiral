@@ -97,7 +97,6 @@
             ],
             "Spiral\\Scaffolder\\": "src/Scaffolder/src",
             "Spiral\\Security\\": "src/Security/src",
-            "Spiral\\SendIt\\": "src/SendIt/src",
             "Spiral\\Session\\": "src/Session/src",
             "Spiral\\Snapshots\\": "src/Snapshots/src",
             "Spiral\\Stempler\\": [
@@ -219,7 +218,6 @@
         "spiral/router": "*",
         "spiral/scaffolder": "*",
         "spiral/security": "*",
-        "spiral/sendit": "*",
         "spiral/session": "*",
         "spiral/snapshots": "*",
         "spiral/stempler": "*",
@@ -233,8 +231,11 @@
     "scripts": {
         "tests": [
             "phpunit --testdox",
+            "@analyze"
+        ],
+        "analyze": [
             "phpcs --standard=phpcs.xml",
-            "psalm"
+            "psalm --no-cache"
         ],
         "fixers": [
             "phpcbf --standard=phpcs.xml",
@@ -246,6 +247,7 @@
         "temporal/sdk": "(^1.0) RoadRunner Temporal support for Spiral Framework",
         "spiral/php-grpc": "(^1.4) RoadRunner GRPC support for Spiral Framework",
         "spiral/jobs": "(^2.2) RoadRunner Jobs support for Spiral Framework",
+        "spiral/sendit": "(^2.8) Mail jobs service support for Spiral Framework",
         "spiral/broadcast": "(^2.0) RoadRunner Broadcast support for Spiral Framework"
     },
     "extra": {
