@@ -36,51 +36,58 @@ class RoadRunnerBootloader extends Bootloader
         //
         // Register RoadRunner Environment
         //
-        $environmentRegistrar = static function (GlobalEnvironmentInterface $env): EnvironmentInterface {
-            return new Environment($env->getAll());
-        };
+        $container->bindSingleton(EnvironmentInterface::class,
+            static function (GlobalEnvironmentInterface $env): EnvironmentInterface {
+                return new Environment($env->getAll());
+            });
 
-        $container->bindSingleton(EnvironmentInterface::class, $environmentRegistrar);
-        $container->bindSingleton(Environment::class, $environmentRegistrar);
+        $container->bindSingleton(Environment::class,
+            static function (EnvironmentInterface $env): EnvironmentInterface {
+                return $env;
+            });
 
         //
         // Register RPC
         //
-        $rpcRegistrar = static function (EnvironmentInterface $env): RPCInterface {
-            return RPC::create($env->getRPCAddress());
-        };
+        $container->bindSingleton(RPCInterface::class,
+            static function (EnvironmentInterface $env): RPCInterface {
+                return RPC::create($env->getRPCAddress());
+            });
 
-        $container->bindSingleton(RPCInterface::class, $rpcRegistrar);
-        $container->bindSingleton(RPC::class, $rpcRegistrar);
+        $container->bindSingleton(RPC::class,
+            static function (RPCInterface $rpc): RPCInterface {
+                return $rpc;
+            });
 
         //
         // Register Worker
         //
-        $workerRegistrar = static function (EnvironmentInterface $env): WorkerInterface {
-            return Worker::createFromEnvironment($env);
-        };
+        $container->bindSingleton(WorkerInterface::class,
+            static function (EnvironmentInterface $env): WorkerInterface {
+                return Worker::createFromEnvironment($env);
+            });
 
-        $container->bindSingleton(WorkerInterface::class, $workerRegistrar);
-        $container->bindSingleton(Worker::class, $workerRegistrar);
+        $container->bindSingleton(Worker::class,
+            static function (WorkerInterface $worker): WorkerInterface {
+                return $worker;
+            });
 
         //
         // Register PSR Worker
         //
-        $registrar = static function (
-            WorkerInterface $worker,
-            ServerRequestFactory $requests,
-            StreamFactory $streams,
-            UploadedFileFactory $uploads
-        ): PSR7WorkerInterface {
-            return new PSR7Worker(
-                $worker,
-                $requests,
-                $streams,
-                $uploads
-            );
-        };
+        $container->bindSingleton(PSR7WorkerInterface::class,
+            static function (
+                WorkerInterface $worker,
+                ServerRequestFactory $requests,
+                StreamFactory $streams,
+                UploadedFileFactory $uploads
+            ): PSR7WorkerInterface {
+                return new PSR7Worker($worker, $requests, $streams, $uploads);
+            });
 
-        $container->bindSingleton(PSR7WorkerInterface::class, $registrar);
-        $container->bindSingleton(PSR7Worker::class, $registrar);
+        $container->bindSingleton(PSR7Worker::class,
+            static function (PSR7WorkerInterface $psr7): PSR7WorkerInterface {
+                return $psr7;
+            });
     }
 }
