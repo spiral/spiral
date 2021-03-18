@@ -13,11 +13,13 @@ namespace Spiral\Bootloader\Jobs;
 
 use Psr\Container\ContainerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
+use Spiral\Boot\Exception\BootException;
 use Spiral\Boot\KernelInterface;
 use Spiral\Bootloader\ServerBootloader;
 use Spiral\Core\Container;
 use Spiral\Goridge\RPC as LegacyRPC;
 use Spiral\Goridge\RPC\RPC;
+use Spiral\GRPC\ServiceInterface;
 use Spiral\Jobs\HandlerRegistryInterface;
 use Spiral\Jobs\JobDispatcher;
 use Spiral\Jobs\JobQueue;
@@ -37,6 +39,20 @@ final class JobsBootloader extends Bootloader
         SerializerRegistryInterface::class => JobRegistry::class,
         JobRegistry::class                 => [self::class, 'jobRegistry'],
     ];
+
+    /**
+     * JobsBootloader constructor.
+     */
+    public function __construct()
+    {
+        if (! \interface_exists(QueueInterface::class)) {
+            throw new BootException(
+                'Unable to find [spiral/jobs] dependency, ' .
+                'please install it using Composer:' . \PHP_EOL .
+                '    composer require spiral/jobs'
+            );
+        }
+    }
 
     /**
      * @param Container $container
