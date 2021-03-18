@@ -8,7 +8,7 @@
     hoistConstants="true"
     resolveFromConfigFile="true"
     allowPhpStormGenerics="true"
-    findUnusedPsalmSuppress="true"
+    findUnusedPsalmSuppress="false"
     findUnusedVariablesAndParams="true"
     ensureArrayStringOffsetsExist="true"
     addParamDefaultToDocblockType="true"
@@ -21,20 +21,23 @@
         </ignoreFiles>
     </projectFiles>
     <issueHandlers>
+        <!-- Framework bootloaders may contain undefined dependencies that are checked in the bootloader constructor.
+             Therefore, errors of non-existent classes and dependencies can be suppressed -->
         <UndefinedClass>
             <errorLevel type="suppress">
-                <file name="src/Framework/Bootloader/Server/RoadRunnerBootloader.php" />
-                <file name="src/Framework/Bootloader/Server/LegacyRoadRunnerBootloader.php" />
-                <file name="src/Framework/Bootloader/Jobs/JobsBootloader.php" />
-                <file name="src/Framework/Http/RrDispatcher.php" />
-                <file name="src/Framework/Http/LegacyRrDispatcher.php" />
+                <directory name="src/Framework" />
             </errorLevel>
         </UndefinedClass>
-        <UndefinedDocblockClass>
+        <MissingDependency>
             <errorLevel type="suppress">
-                <file name="src/Framework/Jobs/JobQueue.php" />
+                <directory name="src/Framework" />
             </errorLevel>
-        </UndefinedDocblockClass>
+        </MissingDependency>
+        <UndefinedConstant>
+            <errorLevel type="suppress">
+                <directory name="src/Framework" />
+            </errorLevel>
+        </UndefinedConstant>
         <UnusedClosureParam errorLevel="suppress" />
     </issueHandlers>
     <stubs>

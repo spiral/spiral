@@ -19,7 +19,6 @@ use Spiral\Bootloader\ServerBootloader;
 use Spiral\Core\Container;
 use Spiral\Goridge\RPC as LegacyRPC;
 use Spiral\Goridge\RPC\RPC;
-use Spiral\GRPC\ServiceInterface;
 use Spiral\Jobs\HandlerRegistryInterface;
 use Spiral\Jobs\JobDispatcher;
 use Spiral\Jobs\JobQueue;
@@ -34,6 +33,9 @@ final class JobsBootloader extends Bootloader
         ServerBootloader::class,
     ];
 
+    /**
+     * @psalm-suppress MissingDependency
+     */
     protected const SINGLETONS = [
         HandlerRegistryInterface::class    => JobRegistry::class,
         SerializerRegistryInterface::class => JobRegistry::class,

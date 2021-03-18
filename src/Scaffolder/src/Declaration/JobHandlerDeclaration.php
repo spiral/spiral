@@ -29,7 +29,8 @@ class JobHandlerDeclaration extends ClassDeclaration implements DependedInterfac
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
+     * @psalm-suppress UndefinedClass
      */
     public function getDependencies(): array
     {

@@ -38,7 +38,7 @@ use Temporal\WorkerFactory;
 /**
  * Enables support of Temporal
  *
- * @psalm-import-type DateIntervalValue from DateInterval
+ * @psalm-type DateIntervalValue = string | int | float | \DateInterval
  *
  * @psalm-type ClientConfigSectionRejectionCondition = QueryRejectCondition::QUERY_REJECT_CONDITION_*
  *
@@ -87,6 +87,7 @@ final class TemporalBootloader extends Bootloader
 {
     /**
      * @var TemporalConfigArray
+     * @psalm-suppress UndefinedConstant
      */
     private const DEFAULT_CONFIGURATION = [
 
@@ -129,7 +130,7 @@ final class TemporalBootloader extends Bootloader
                  *
                  * @var string
                  */
-                'namespace'               => ClientOptions::DEFAULT_NAMESPACE,
+                'namespace'               => 'default',
 
                 /**
                  * Temporal Client Identifier
@@ -143,7 +144,7 @@ final class TemporalBootloader extends Bootloader
                  *
                  * @var QueryRejectCondition::QUERY_REJECT_CONDITION_*
                  */
-                'queryRejectionCondition' => QueryRejectCondition::QUERY_REJECT_CONDITION_NONE,
+                'queryRejectionCondition' => 1,
             ],
 
         ],
@@ -163,7 +164,7 @@ final class TemporalBootloader extends Bootloader
 
         'workers'  => [
 
-            WorkerFactoryInterface::DEFAULT_TASK_QUEUE => [
+            'default' => [
 
                 /**
                  * List of workflows processed within this worker.
@@ -450,11 +451,11 @@ final class TemporalBootloader extends Bootloader
     /**
      * @param array $config
      * @return \Closure
+     * @psalm-suppress UnusedVariable
      */
     private function createClientResolver(array $config): \Closure
     {
         return static function () use ($config): WorkflowClientInterface {
-            $client = ServiceClient::create($config['host'] ?? 'localhost:7233');
             $options = new ClientOptions();
 
             if (isset($config['namespace'])) {
@@ -469,7 +470,10 @@ final class TemporalBootloader extends Bootloader
                 $options = $options->withQueryRejectionCondition($config['queryRejectionCondition']);
             }
 
-            return WorkflowClient::create($client, $options);
+            return WorkflowClient::create(
+                ServiceClient::create($config['host'] ?? 'localhost:7233'),
+                $options
+            );
         };
     }
 }
