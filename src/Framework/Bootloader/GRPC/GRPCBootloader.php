@@ -33,7 +33,7 @@ final class GRPCBootloader extends Bootloader
      */
     public function __construct()
     {
-        if (! \interface_exists(ServiceInterface::class)) {
+        if (!\interface_exists(ServiceInterface::class)) {
             throw new BootException(
                 'Unable to find [spiral/php-grpc] dependency, ' .
                 'please install it using Composer:' . \PHP_EOL .

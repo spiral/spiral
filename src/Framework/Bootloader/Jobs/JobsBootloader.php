@@ -45,7 +45,7 @@ final class JobsBootloader extends Bootloader
      */
     public function __construct()
     {
-        if (! \interface_exists(QueueInterface::class)) {
+        if (!\interface_exists(QueueInterface::class)) {
             throw new BootException(
                 'Unable to find [spiral/jobs] dependency, ' .
                 'please install it using Composer:' . \PHP_EOL .

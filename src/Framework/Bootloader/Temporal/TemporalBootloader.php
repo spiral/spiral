@@ -86,11 +86,6 @@ use Temporal\WorkerFactory;
 final class TemporalBootloader extends Bootloader
 {
     /**
-     * @var ConfiguratorInterface
-     */
-    private $configurator;
-
-    /**
      * @var TemporalConfigArray
      */
     private const DEFAULT_CONFIGURATION = [
@@ -204,11 +199,15 @@ final class TemporalBootloader extends Bootloader
                     // 'enableSessionWorker'                     => false,
                     // 'sessionResourceId'                       => null,
                     // 'maxConcurrentSessionExecutionSize'       => 1000,
-                ]
+                ],
             ],
 
         ],
     ];
+    /**
+     * @var ConfiguratorInterface
+     */
+    private $configurator;
 
     /**
      * Please note that this bootloader class can only be initialized if
@@ -220,7 +219,7 @@ final class TemporalBootloader extends Bootloader
     {
         $this->configurator = $configurator;
 
-        if (! \interface_exists(WorkerInterface::class)) {
+        if (!\interface_exists(WorkerInterface::class)) {
             throw new BootException(
                 'Unable to find [temporal/sdk] dependency, ' .
                 'please install it using Composer:' . \PHP_EOL .

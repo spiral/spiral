@@ -31,7 +31,7 @@ final class BroadcastBootloader extends Bootloader
      */
     public function __construct()
     {
-        if (! \interface_exists(BroadcastInterface::class)) {
+        if (!\interface_exists(BroadcastInterface::class)) {
             throw new BootException(
                 'Unable to find [spiral/broadcast] dependency, ' .
                 'please install it using Composer:' . \PHP_EOL .

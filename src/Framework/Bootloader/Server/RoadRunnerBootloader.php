@@ -36,46 +36,59 @@ class RoadRunnerBootloader extends Bootloader
         //
         // Register RoadRunner Environment
         //
-        $container->bindSingleton(EnvironmentInterface::class,
+        $container->bindSingleton(
+            EnvironmentInterface::class,
             static function (GlobalEnvironmentInterface $env): EnvironmentInterface {
                 return new Environment($env->getAll());
-            });
+            }
+        );
 
-        $container->bindSingleton(Environment::class,
+        $container->bindSingleton(
+            Environment::class,
             static function (EnvironmentInterface $env): EnvironmentInterface {
                 return $env;
-            });
+            }
+        );
 
         //
         // Register RPC
         //
-        $container->bindSingleton(RPCInterface::class,
+        $container->bindSingleton(
+            RPCInterface::class,
             static function (EnvironmentInterface $env): RPCInterface {
                 return RPC::create($env->getRPCAddress());
-            });
+            }
+        );
 
-        $container->bindSingleton(RPC::class,
+        $container->bindSingleton(
+            RPC::class,
             static function (RPCInterface $rpc): RPCInterface {
                 return $rpc;
-            });
+            }
+        );
 
         //
         // Register Worker
         //
-        $container->bindSingleton(WorkerInterface::class,
+        $container->bindSingleton(
+            WorkerInterface::class,
             static function (EnvironmentInterface $env): WorkerInterface {
                 return Worker::createFromEnvironment($env);
-            });
+            }
+        );
 
-        $container->bindSingleton(Worker::class,
+        $container->bindSingleton(
+            Worker::class,
             static function (WorkerInterface $worker): WorkerInterface {
                 return $worker;
-            });
+            }
+        );
 
         //
         // Register PSR Worker
         //
-        $container->bindSingleton(PSR7WorkerInterface::class,
+        $container->bindSingleton(
+            PSR7WorkerInterface::class,
             static function (
                 WorkerInterface $worker,
                 ServerRequestFactory $requests,
@@ -83,11 +96,14 @@ class RoadRunnerBootloader extends Bootloader
                 UploadedFileFactory $uploads
             ): PSR7WorkerInterface {
                 return new PSR7Worker($worker, $requests, $streams, $uploads);
-            });
+            }
+        );
 
-        $container->bindSingleton(PSR7Worker::class,
+        $container->bindSingleton(
+            PSR7Worker::class,
             static function (PSR7WorkerInterface $psr7): PSR7WorkerInterface {
                 return $psr7;
-            });
+            }
+        );
     }
 }
