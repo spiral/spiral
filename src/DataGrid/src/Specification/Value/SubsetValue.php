@@ -31,9 +31,9 @@ final class SubsetValue implements ValueInterface
     /**
      * @inheritDoc
      */
-    public function accepts($values): bool
+    public function accepts($value): bool
     {
-        $values = (array)$values;
+        $values = (array)$value;
 
         if (count($values) === 1) {
             return $this->enum->accepts(array_values($values)[0]);
@@ -49,9 +49,9 @@ final class SubsetValue implements ValueInterface
     /**
      * @inheritDoc
      */
-    public function convert($values)
+    public function convert($value)
     {
-        return $this->arrayType()->convert((array)$values);
+        return $this->arrayType()->convert((array)$value);
     }
 
     /**

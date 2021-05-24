@@ -191,13 +191,13 @@ final class Container implements
      * @throws ContainerException
      * @throws \Throwable
      */
-    public function get($alias, string $context = null)
+    public function get($id, string $context = null)
     {
-        if ($alias instanceof Autowire) {
-            return $alias->resolve($this);
+        if ($id instanceof Autowire) {
+            return $id->resolve($this);
         }
 
-        return $this->make($alias, [], $context);
+        return $this->make($id, [], $context);
     }
 
     /**
@@ -339,9 +339,9 @@ final class Container implements
     /**
      * {@inheritdoc}
      */
-    public function has($alias): bool
+    public function has($id): bool
     {
-        return \array_key_exists($alias, $this->bindings);
+        return \array_key_exists($id, $this->bindings);
     }
 
     /**

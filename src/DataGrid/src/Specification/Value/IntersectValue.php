@@ -31,16 +31,16 @@ final class IntersectValue implements ValueInterface
     /**
      * @inheritDoc
      */
-    public function accepts($values): bool
+    public function accepts($value): bool
     {
-        $values = (array)$values;
+        $values = (array)$value;
 
         if (count($values) === 1) {
             return $this->enum->accepts(array_values($values)[0]);
         }
 
-        foreach ($values as $value) {
-            if ($this->enum->accepts($value)) {
+        foreach ($values as $v) {
+            if ($this->enum->accepts($v)) {
                 return true;
             }
         }
@@ -52,12 +52,12 @@ final class IntersectValue implements ValueInterface
      * @inheritDoc
      * @return array
      */
-    public function convert($values): array
+    public function convert($value): array
     {
         $result = [];
-        foreach ((array)$values as $value) {
-            if ($this->enum->accepts($value)) {
-                $result[] = $this->enum->convert($value);
+        foreach ((array)$value as $v) {
+            if ($this->enum->accepts($v)) {
+                $result[] = $this->enum->convert($v);
             }
         }
 

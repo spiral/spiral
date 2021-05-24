@@ -81,7 +81,6 @@ final class StringChecker extends AbstractChecker implements SingletonInterface
     /**
      * Check if string length are fits in specified range.
      *
-     * @psalm-suppress UndefinedVariable
      * @param mixed $value
      * @param int   $min
      * @param int   $max
@@ -89,8 +88,12 @@ final class StringChecker extends AbstractChecker implements SingletonInterface
      */
     public function range($value, int $min, int $max): bool
     {
-        return is_string($value)
-            && (mb_strlen($trimmed = trim($value)) >= $min)
-            && (mb_strlen($trimmed) <= $max);
+        if (!is_string($value)) {
+            return false;
+        }
+
+        $trimmed = trim($value);
+
+        return mb_strlen($trimmed) >= $min && mb_strlen($trimmed) <= $max;
     }
 }

@@ -13,4 +13,11 @@
             <directory name="vendor" />
         </ignoreFiles>
     </projectFiles>
+    <issueHandlers>
+        <UndefinedDocblockClass>
+            <errorLevel type="suppress">
+                <file name="src/Psr16CachedReader.php"/>
+            </errorLevel>
+        </UndefinedDocblockClass>
+    </issueHandlers>
 </psalm>

@@ -17,7 +17,7 @@ namespace Spiral\Models;
 class SchematicEntity extends AbstractEntity
 {
     /** @var array */
-    private $schema = [];
+    private $schema;
 
     /**
      * @param array $data
@@ -39,25 +39,21 @@ class SchematicEntity extends AbstractEntity
         }
 
         if (!empty($this->schema[ModelSchema::FILLABLE])) {
-            return in_array($field, $this->schema[ModelSchema::FILLABLE]);
+            return in_array($field, $this->schema[ModelSchema::FILLABLE], true);
         }
 
         if (!empty($this->schema[ModelSchema::SECURED]) && $this->schema[ModelSchema::SECURED] === '*') {
             return false;
         }
 
-        return !in_array($field, $this->schema[ModelSchema::SECURED]);
+        return !in_array($field, $this->schema[ModelSchema::SECURED], true);
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function getMutator(string $field, string $mutator)
+    protected function getMutator(string $field, string $type)
     {
-        if (isset($this->schema[ModelSchema::MUTATORS][$mutator][$field])) {
-            return $this->schema[ModelSchema::MUTATORS][$mutator][$field];
-        }
-
-        return null;
+        return $this->schema[ModelSchema::MUTATORS][$type][$field] ?? null;
     }
 }

@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Spiral\Attributes\Internal\Instantiator;
 
-use JetBrains\PhpStorm\Pure;
 use Doctrine\Common\Annotations\DocParser;
 use Spiral\Attributes\Exception\AttributeException;
 use Spiral\Attributes\Exception\SemanticAttributeException;
@@ -136,11 +135,6 @@ final class DoctrineInstantiator extends Instantiator
         return new SemanticAttributeException($message);
     }
 
-    /**
-     * @param \ReflectionClass $class
-     * @return string
-     */
-    #[Pure]
     private function getAvailablePropertiesString(\ReflectionClass $class): string
     {
         return \implode(', ', \get_class_vars($class->getName()));

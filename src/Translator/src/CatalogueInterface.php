@@ -52,9 +52,9 @@ interface CatalogueInterface
      *
      * @param string $domain
      * @param string $id
-     * @param string $string
+     * @param string $translation
      */
-    public function set(string $domain, string $id, string $string);
+    public function set(string $domain, string $id, string $translation);
 
     /**
      * Must return all locale data.

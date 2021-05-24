@@ -3,10 +3,8 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
     xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
-
-    errorLevel="8"
+    errorLevel="7"
     hoistConstants="true"
-    resolveFromConfigFile="true"
     allowPhpStormGenerics="true"
     findUnusedPsalmSuppress="true"
     findUnusedVariablesAndParams="true"
@@ -17,6 +15,7 @@
         <directory name="src/*/src" />
         <directory name="src/Framework" />
         <ignoreFiles>
+            <file name="src/Attributes/src/polyfill.php"/>
             <directory name="vendor" />
         </ignoreFiles>
     </projectFiles>
@@ -36,6 +35,12 @@
             </errorLevel>
         </UndefinedDocblockClass>
         <UnusedClosureParam errorLevel="suppress" />
+        <InvalidThrow>
+            <errorLevel type="suppress">
+                <file name="src/Attributes/src/Psr16CachedReader.php"/>
+                <file name="src/Attributes/src/Psr6CachedReader.php"/>
+            </errorLevel>
+        </InvalidThrow>
     </issueHandlers>
     <stubs>
         <file name="resources/stubs/php/reflection/Attribute.phpstub" />

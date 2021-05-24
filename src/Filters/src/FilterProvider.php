@@ -66,16 +66,16 @@ final class FilterProvider implements FilterProviderInterface
     /**
      * @inheritDoc
      */
-    public function createFilter(string $filter, InputInterface $input): FilterInterface
+    public function createFilter(string $name, InputInterface $input): FilterInterface
     {
-        $schema = $this->getSchema($filter);
+        $schema = $this->getSchema($name);
 
         /** @var Filter $instance */
-        $instance = $this->factory->make($filter, [
+        $instance = $this->factory->make($name, [
             'data'        => [],
             'schema'      => $schema,
-            'validator'   => $this->getValidator($filter),
-            'errorMapper' => $this->getErrorMapper($filter),
+            'validator'   => $this->getValidator($name),
+            'errorMapper' => $this->getErrorMapper($name),
         ]);
 
         $instance->setValue($this->initValues($schema[self::MAPPING], $input));

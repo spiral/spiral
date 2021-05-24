@@ -23,8 +23,8 @@ final class Catalogue implements CatalogueInterface
     /** @var string */
     private $locale;
 
-    /** @var array */
-    private $data = [];
+    /** @var array<string, array<string, string>> */
+    private $data;
 
     /**
      * @param string $locale
@@ -67,21 +67,21 @@ final class Catalogue implements CatalogueInterface
     /**
      * @inheritdoc
      */
-    public function get(string $domain, string $string): string
+    public function get(string $domain, string $id): string
     {
-        if (!$this->has($domain, $string)) {
+        if (!$this->has($domain, $id)) {
             throw new CatalogueException("Undefined string in domain '{$domain}'");
         }
 
-        return $this->data[$domain][$string];
+        return $this->data[$domain][$id];
     }
 
     /**
      * @inheritdoc
      */
-    public function set(string $domain, string $string, string $value): void
+    public function set(string $domain, string $id, string $translation): void
     {
-        $this->data[$domain][$string] = $value;
+        $this->data[$domain][$id] = $translation;
     }
 
     /**
@@ -115,8 +115,6 @@ final class Catalogue implements CatalogueInterface
 
     /**
      * Converts into one MessageCatalogue.
-     *
-     * @return MessageCatalogue
      */
     public function toMessageCatalogue(): MessageCatalogue
     {

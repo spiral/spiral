@@ -25,6 +25,7 @@ final class StreamWrapper
      * @var resource
      */
     public $context = null;
+
     /** @var bool */
     private static $registered = false;
 
@@ -165,7 +166,6 @@ final class StreamWrapper
 
     /**
      * Register stream wrapper.
-     * @psalm-suppress UnusedFunctionCall
      */
     public static function register()
     {

@@ -56,7 +56,6 @@ final class ConstructorParam
         $stmt->name = $parameter->getName();
 
         if ($parameter->hasType()) {
-            /** @var \ReflectionType $type */
             $type = $parameter->getType();
             $stmt->type = Type::create($type->getName());
             $stmt->builtIn = $type->isBuiltin();
