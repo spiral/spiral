@@ -60,6 +60,7 @@ final class ValidationBootloader extends Bootloader implements SingletonInterfac
                 // under common name and class. You can register new checkers at any moment without any
                 // performance issues.
                 'checkers'   => [
+                    'array'    => Checker\ArrayChecker::class,
                     'type'     => Checker\TypeChecker::class,
                     'number'   => Checker\NumberChecker::class,
                     'mixed'    => Checker\MixedChecker::class,
