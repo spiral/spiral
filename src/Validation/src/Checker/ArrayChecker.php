@@ -19,7 +19,7 @@ class ArrayChecker extends AbstractChecker
 
     public function of($value, $checker): bool
     {
-        if (!is_array($value) || empty($value)) {
+        if (!is_array($value)) {
             return false;
         }
 
