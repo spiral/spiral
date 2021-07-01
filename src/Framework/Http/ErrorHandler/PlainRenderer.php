@@ -40,7 +40,10 @@ final class PlainRenderer implements RendererInterface
     public function renderException(Request $request, int $code, string $message): Response
     {
         $response = $this->responseFactory->createResponse($code);
-        if ($request->getHeaderLine('Accept') == 'application/json') {
+        if (
+            $request->getHeaderLine('Accept') == 'application/json'
+            || $request->getHeaderLine('Content-Type') === 'application/json'
+        ) {
             $response->getBody()->write(json_encode(['status' => $code, 'error' => $message]));
         } else {
             $response->getBody()->write("Error code: {$code}");
