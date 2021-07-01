@@ -18,6 +18,7 @@ use Spiral\Prototype\Exception\ClassNotDeclaredException;
 use Spiral\Prototype\Injector;
 use Spiral\Prototype\NodeExtractor;
 use Spiral\Tests\Prototype\ClassNode\ConflictResolver\Fixtures as ResolverFixtures;
+use Spiral\Tests\Prototype\Fixtures\LocalRedundantInjection;
 use Spiral\Tests\Prototype\Fixtures\Dependencies;
 use Spiral\Tests\Prototype\Fixtures\TestClass;
 
@@ -29,6 +30,30 @@ class InjectorTest extends TestCase
     {
         if ((string)ini_get('zend.assertions') === 1) {
             ini_set('zend.assertions', 0);
+        }
+    }
+
+    public function testLocalRedundantInjection(): void
+    {
+        $target = LocalRedundantInjection::class;
+        $reflection = new \ReflectionClass($target);
+        $filename = $reflection->getFileName();
+        $source = file_get_contents($filename);
+
+        try {
+            $i = new Injector();
+            $printed = $i->injectDependencies(
+                file_get_contents($filename),
+                $this->getDefinition($filename, ['test' => TestClass::class])
+            );
+
+            $this->assertMatchesRegularExpression('/@var TestClass[\s|\r\n]/', $printed);
+            $this->assertStringContainsString('@param TestClass $test', $printed);
+            $this->assertStringNotContainsString('private $test;', $printed);
+            $this->assertStringNotContainsString('private TestClass $test;', $printed);
+//            print_r($printed);
+        } finally {
+            file_put_contents($filename, $source);
         }
     }
 

@@ -25,6 +25,8 @@ final class LocateProperties extends NodeVisitorAbstract
     /** @var array */
     private $requested = [];
 
+    private $test=[];
+
     /**
      * Get names of all virtual properties.
      *
@@ -32,10 +34,13 @@ final class LocateProperties extends NodeVisitorAbstract
      */
     public function getProperties(): array
     {
-        return array_values(array_diff(
-            array_values($this->requested),
-            array_values($this->properties)
-        ));
+//        print_r([$this->requested?:null, $this->properties?:null, $this->test?:null]);
+        return array_values(
+            array_diff(
+                array_keys($this->requested),
+                array_values($this->properties)
+            )
+        );
     }
 
     /**
@@ -63,5 +68,25 @@ final class LocateProperties extends NodeVisitorAbstract
         }
 
         return null;
+    }
+
+    public function leaveNode(Node $node)
+    {
+        if ($node instanceof Node\Stmt\ClassMethod) {
+            print_r($node);
+            foreach ($node->stmts as $stmt) {
+                if (
+                    $stmt instanceof Node\Expr\PropertyFetch &&
+                    $stmt->var instanceof Node\Expr\Variable &&
+                    $stmt->var->name === 'this'
+                ) {
+                    if (!isset($this->requested[$stmt->name->name])) {
+                        $this->test[$stmt->name->name] = [(string)$node->name];
+                    } else {
+                        $this->test[$stmt->name->name][] = (string)$node->name;
+                    }
+                }
+            }
+        }
     }
 }
