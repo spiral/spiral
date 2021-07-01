@@ -28,8 +28,26 @@ class GridSchema
     /** @var SorterInterface[] */
     private $sorters = [];
 
+    /** @var callable|null */
+    private $wrapper;
+
     /** @var FilterInterface|null */
     private $paginator;
+
+    public function addFilterWrapper(callable $wrapper): void
+    {
+        $this->wrapper = $wrapper;
+    }
+
+    public function wrapFilters(array $input): array
+    {
+        if (!$this->wrapper) {
+            return $input;
+        }
+
+        $wrapper = $this->wrapper;
+        return $wrapper($input);
+    }
 
     /**
      * Define new data filter.

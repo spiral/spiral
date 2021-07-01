@@ -125,19 +125,24 @@ class GridFactory implements GridFactoryInterface
 
     protected function getFilters($source, GridSchema $schema): array
     {
+        $values = [];
         $filters = [];
         foreach ($this->getOptionArray(static::KEY_FILTER) ?? [] as $name => $value) {
             if ($schema->hasFilter($name)) {
                 $filter = $schema->getFilter($name)->withValue($value);
 
                 if ($filter !== null) {
-                    $source = $this->compiler->compile($source, $filter);
-                    $filters[$name] = $filter->getValue();
+                    $filters[$name] = $filter;
+                    $values[$name] = $filter->getValue();
                 }
             }
         }
 
-        return compact('source', 'filters');
+        foreach ($schema->wrapFilters($filters) as $filter) {
+            $source = $this->compiler->compile($source, $filter);
+        }
+
+        return ['source' => $source, 'filters' => $values];
     }
 
     protected function applyCounter(GridInterface $view, $source, GridSchema $schema): array
